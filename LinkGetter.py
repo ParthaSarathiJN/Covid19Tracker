@@ -4,6 +4,12 @@
 	#		manually copy them and place them in the urls variable in the next 2nd thing.
 
 
+from bs4 import BeautifulSoup
+import requests
+import json
+
+
+
 
 LinksOfListOpen = open('LinksOfList.json', 'w')
 
