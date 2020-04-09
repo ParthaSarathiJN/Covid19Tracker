@@ -6,7 +6,16 @@ from multiprocessing.pool import ThreadPool
 import os
 import glob
 import fileinput
+import pandas as pd
+from matplotlib import pyplot as plt
+import matplotlib
+import numpy as np
 
+
+csvClear = "Covid19Result.csv"
+# opening the file with w+ mode truncates the file
+f = open(csvClear, "w+")
+f.close()
 
 
 	# 1 ----> -------------------------------------------------------------------------------#
@@ -119,6 +128,8 @@ os.chdir('Your/Path/Followed/With/Back/To/Main/Working/Directory/')
 
 	# 3B ---> 
 
+	
+
 with open('FileNamesWithCsv.json', 'r+') as file:
 	fileList = [line.rstrip('\n') for line in file]
 	#print(fileList)
@@ -147,6 +158,11 @@ with open('FileNamesWithCsv.json','r') as jsonFile:
 				print('FIPS,Admin2,Province_State,Country_Region,Last Update,Lat,Long_,Confirmed,Deaths,Recovered,Active,Combined_Key')
 			else:
 				print(line)
+
+		#New Line Added here
+
+		df = pd.read_csv(jsonFileActiveNames[files])
+		df.to_csv(jsonFileActiveNames[files], index=False)
 
 
 
@@ -184,7 +200,6 @@ with open('DatesOfAllDatesJsonHolder.json', 'r+') as file:
 
 
 	# 6 ----> ---------------------------------------------------------------------------------------#
-
 
 
 
@@ -258,16 +273,76 @@ with open('FileNamesWithCsv.json','r') as jsonFile:
 
 
 			resultList = RemoveUseless(correct_order_list)
+			
+			#Use if you want to remove the rows with ,,, values ie when removing the values with 1-3 cases
+			noValueDeleter = ['Confirmed']			
 
 			with open('Covid19Result.csv', 'a+', newline='') as writeFile:
 				fieldnames = ['Last Update', 'Confirmed', 'Deaths', 'Recovered', 'Active']
 				
 				csv_writer = csv.DictWriter(writeFile, fieldnames=fieldnames)
 
+
+					#Takes out the ROWs with 0,1,2,3 in them and replaces with empty('') values.	
+				for noValue in noValueDeleter:
+					if resultList[noValue] == '0' or resultList[noValue] == '1' or resultList[noValue] == '2' or resultList[noValue] == '3':
+						resultList.clear()
+						
+						
 				csv_writer.writerow(resultList)
 
 			#print(resultList) # Shows the result which is getting appended to csv file
 			#print(len(resultList)) # Shows the number of colums in the result == 5
 
 jsonFile.close()
+
+
+	# Takes out all the empty('') values if 0-3 cases filtered out and adds x.0 at the end
+df = pd.read_csv("Covid19Result.csv")
+##checking the number of empty rows in th csv file
+print (df.isnull().sum())
+##Droping the empty rows
+modifiedDF = df.dropna()
+##Saving it to the csv file 
+modifiedDF.to_csv('Covid19Result.csv',index=False)
+
+
+
+
+plt.style.use('seaborn')
+
+ResultData = pd.read_csv('Covid19Result.csv')
+
+
+labels = ResultData['Date'] #x-values
+
+
+ResultDataConfirm = ResultData['Confirmed']
+ResultDataDeath = ResultData['Deaths']
+ResultDataRecover = ResultData['Recovered']
+ResultDataAct = ResultData['Active']
+
+
+x = np.arange(len(labels))
+barWidth = 0.4
+
+
+fig, ax = plt.subplots()
+
+
+rects1 = ax.barh(x + barWidth / 2, ResultDataConfirm, barWidth, color='#204051', label='Confirmed')
+rects2 = ax.barh(x - barWidth / 2, ResultDataAct, barWidth, color='#1eb2a6', label='Active')
+rects3 = ax.barh(x + barWidth / 4, ResultDataRecover, barWidth, color='#ffb0cd', label='Recovered')
+rects4 = ax.barh(x - barWidth / 4, ResultDataDeath, barWidth, color='#dd2c00', label='Deaths') #3b6978
+
+ax.set_title('Covid19 in India')
+ax.set_xlabel('Number of People')
+ax.set_yticks(x)
+ax.set_yticklabels(labels)
+ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.1), shadow=True, ncol=4)
+
+
+fig.tight_layout()
+
+plt.show()
 
