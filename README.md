@@ -19,4 +19,4 @@ The DateOfAllDates.json holds a list of dates in the csv files and is needed for
 At the last path everything gets sorted and appended and is stored in the Covid19Result.csv.
 
 
-# There's also a MatPlotLibPlotGraph.py file which can be used to mess around with the styles and if needed more data can be displayed. But it is not needed to be run.
+***There is also a MatPlotLibPlotGraph.py file which can be used to mess around with the styles and if needed more data can be displayed. But it is not needed to be run.***
