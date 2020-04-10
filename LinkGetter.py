@@ -1,6 +1,7 @@
+	#	This code needs to be executed first. After execution of this file go to DownloadLink.py.
+	#
 	# 	This code needs to be in another file(LinkGetter.py) because, it gets the link of the files(csvs) which need to
-	#		be downloaded in order to analyze the data, but it can't automatically call each of the links in 
-	#		the next process. 
+	#		be downloaded to analyze the data, but it can't automatically call each of the links in the next process. 
 	#
 	#	So you need to run this code first individually, later go for the file - LinksOfList.json where all the 
 	#		links get stored. Then you have to manually copy the whole list present in LinksOfList.json and 
