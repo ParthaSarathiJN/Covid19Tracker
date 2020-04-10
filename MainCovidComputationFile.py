@@ -20,17 +20,19 @@ f.close()
 
 	# 1 ----> -------------------------------------------------------------------------------#
 
-	# 	This needs to be in another file because once it's run, it gets the file links but it can't automatically 
-	# 		call each of the links in the next process. 
-	#	So you need to run this file first then go for the file where all the links get printed. Then you should 
-	#		manually copy them and place them in the urls variable in the next 2nd thing.
+	# 	This code needs to be in another file(LinkGetter.py) because, it gets the link of the files(csvs) which need to
+	#		be downloaded to analyze the data, but it can't automatically call each of the links in the next process. 
+	#
+	#	So you need to run this code first individually, later go for the file - LinksOfList.json where all the 
+	#		links get stored. Then you have to manually copy the whole list present in LinksOfList.json and 
+	#		paste them in the urls variable in the next file that is, DownloadLink.py.
 
 #LinksOfListOpen = open('LinksOfList.json', 'w')
 #
-#correct_list = []
-#throwaway_list = []
+#mainList = []
+#temporaryList = []
 #
-#	#	Need to get the links from the CSSEGISand for latest updated data.
+##Need to change URL to CSSEGISandData for latest data
 #URL = "https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports"
 #page = requests.get(URL)
 #
@@ -39,23 +41,24 @@ f.close()
 #
 #
 #for link in soup.find_all('a'):
-#    correct_list.append(link.get('href')) # Prints all the things with href in the page
+#    mainList.append(link.get('href')) 
 #
 #
-#for i in correct_list:
+#for hrefs in mainList:
 #	
-#	if "csse_covid_19_data/csse_covid_19_daily_reports" in i and ".csv" in i:
-#		throwaway_list.append(i)
+#	if "csse_covid_19_data/csse_covid_19_daily_reports" in hrefs and ".csv" in hrefs:
+#		temporaryList.append(hrefs)
 #
-#correct_list = [] # New correct blank list
+#mainList = [] # mainList to clear list
 #
-#for i in throwaway_list:
 #
-#	added_raw = "https://raw.githubusercontent.com" + i
+#for partialLink in temporaryList:
+#
+#	added_raw = "https://raw.githubusercontent.com" + partialLink
 #	removed_blob = added_raw.replace('/blob', "")
-#	correct_list.append(removed_blob)
+#	mainList.append(removed_blob)
 #
-#for file in correct_list:
+#for file in mainList:
 #
 #	LinksOfListOpen.write(str(file + "\n"))
 #
@@ -65,13 +68,13 @@ f.close()
 #
 #
 #with open('LinksOfList.json', 'r+') as file:
-#	mylist = [line.rstrip('\n') for line in file]
-#	#print(mylist)
-#	temp = (json.dumps(mylist)) 
+#	myList = [line.rstrip('\n') for line in file]
+#	#print(myList)
+#	temp = (json.dumps(myList)) 
 #
-#	file.seek(0) # Goes back to the start after keeping the correct list in memory
+#	file.seek(0) # Goes back to the start after keeping the myList in memory
 #
-#	file.write(temp) #Prints the correct list in the specified File
+#	file.write(temp) #Prints the myList in the specified File
 
 
 
@@ -121,7 +124,7 @@ for file in glob.glob('*2020.csv'):
 	fileNameCsvJson.write(str(('Your/Path/Followed/With/Downloads/Of/CsvFiles/' + file + "\n")))
 
 fileNameCsvJson.close()
-	#Needed to change the directory because I downloaded the files in another file so as not to cramp my actual working directory.
+	# Needed to change the directory because there are too many csv files and also so that the main directory is free from clutter.
 os.chdir('Your/Path/Followed/With/Back/To/Main/Working/Directory/')
 
 
@@ -145,7 +148,7 @@ with open('FileNamesWithCsv.json', 'r+') as file:
 
 
 
-lineLast_Update = 58 # Change the number as per the number of l
+lineLast_Update = 58 # Change 58 with the first appearance of Last_Update
 
 with open('FileNamesWithCsv.json','r') as jsonFile:
 	jsonFileActiveNames = json.load(jsonFile)
@@ -159,7 +162,6 @@ with open('FileNamesWithCsv.json','r') as jsonFile:
 			else:
 				print(line)
 
-		#New Line Added here
 
 		df = pd.read_csv(jsonFileActiveNames[files])
 		df.to_csv(jsonFileActiveNames[files], index=False)
@@ -203,7 +205,7 @@ with open('DatesOfAllDatesJsonHolder.json', 'r+') as file:
 
 
 
-headerList = ["Date", "Confirmed", "Deaths", "Recovered", "Active"] # Creates the header list in the result list which is actually needed
+headerList = ["Date", "Confirmed", "Deaths", "Recovered", "Active"] # Creates the header list with the following headers in Covid19Result.csv
 
 statsOpen = open('Covid19Result.csv', 'a+')
 headerWriter = csv.writer(statsOpen)
@@ -216,11 +218,11 @@ dateJsonFile = json.load(jsonFile)
 
 with open('FileNamesWithCsv.json','r') as jsonFile:
 	activeNamesJsonFiles = json.load(jsonFile)
-	dateFromDateList = -1 # Change to -1 if the start date is form the first date (n-1)
+	dateFromDateList = -1 # Change to -1 if the starting date is from the first date 
 
 
 	for files in activeNamesJsonFiles:
-		dateFromDateList += 1		# Needed to go through the datelistjson one by one to append to the Date in result
+		dateFromDateList += 1	# Needed to go through the datelistjson one by one to append to the Date in result
 		
 
 		with open(files, 'r') as activeFile:
