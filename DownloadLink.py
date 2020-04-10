@@ -1,8 +1,11 @@
-	#	 This is the 2nd thing which is also in another file which is needed to be run alone wihtout the rest of the
-	#		code below. 
-	#	Copy the urls which get downloaded by running the above command in another file, and paste them in the urls 
-	#		variable, and it should start downloading by itself, and if you re-run this same file, the .csv files gets 
-	#		overwritten with newest data.
+	#	If you haven't run LinkGetter.py first, this won't work. Execute LinkGetter.py file before executing DownloadLink.py file.
+	#
+	#	This is the 2nd code part which must be executed alone separate from the MainCovidComputation.py.
+	#
+	#	Copy the urls from LinksOfList.json file and paste them in the urls variable in DownloadLink.py file. 
+	#
+	#	Executing DownloadLink.py should start downloading the links in urls variable. If you re-run DownloadLink.py 
+	#		file, the csv files gets overwritten with same data(or else updated data if any).
 
 
 import requests
