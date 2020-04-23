@@ -12,126 +12,114 @@ import matplotlib
 import numpy as np
 
 
+
 csvClear = "Covid19Result.csv"
 # opening the file with w+ mode truncates the file
 f = open(csvClear, "w+")
 f.close()
 
 
+
 	# 1 ----> -------------------------------------------------------------------------------#
 
-	# 	This code needs to be in another file(LinkGetter.py) because, it gets the link of the files(csvs) which need to
-	#		be downloaded to analyze the data, but it can't automatically call each of the links in the next process. 
-	#
-	#	So you need to run this code first individually, later go for the file - LinksOfList.json where all the 
-	#		links get stored. Then you have to manually copy the whole list present in LinksOfList.json and 
-	#		paste them in the urls variable in the next file that is, DownloadLink.py.
 
-#LinksOfListOpen = open('LinksOfList.json', 'w')
-#
-#mainList = []
-#temporaryList = []
-#
-##Need to change URL to CSSEGISandData for latest data
-#URL = "https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports"
-#page = requests.get(URL)
-#
-#soup = BeautifulSoup(page.content, 'html.parser')
-#
-#
-#
-#for link in soup.find_all('a'):
-#    mainList.append(link.get('href')) 
-#
-#
-#for hrefs in mainList:
-#	
-#	if "csse_covid_19_data/csse_covid_19_daily_reports" in hrefs and ".csv" in hrefs:
-#		temporaryList.append(hrefs)
-#
-#mainList = [] # mainList to clear list
-#
-#
-#for partialLink in temporaryList:
-#
-#	added_raw = "https://raw.githubusercontent.com" + partialLink
-#	removed_blob = added_raw.replace('/blob', "")
-#	mainList.append(removed_blob)
-#
-#for file in mainList:
-#
-#	LinksOfListOpen.write(str(file + "\n"))
-#
-#
-#LinksOfListOpen.close()
-#
-#
-#
-#with open('LinksOfList.json', 'r+') as file:
-#	myList = [line.rstrip('\n') for line in file]
-#	#print(myList)
-#	temp = (json.dumps(myList)) 
-#
-#	file.seek(0) # Goes back to the start after keeping the myList in memory
-#
-#	file.write(temp) #Prints the myList in the specified File
+
+LinksOfListOpen = open('LinksOfList.txt', 'w')
+
+mainList = []
+temporaryList = []
+
+
+URL = "https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports"
+page = requests.get(URL)
+
+soup = BeautifulSoup(page.content, 'html.parser')
+
+
+for link in soup.find_all('a'):
+    mainList.append(link.get('href')) 
+
+
+for hrefs in mainList:
+	
+	if "csse_covid_19_data/csse_covid_19_daily_reports" in hrefs and ".csv" in hrefs:
+		temporaryList.append(hrefs)
+
+mainList = [] # mainList to clear list
+
+
+for partialLink in temporaryList:
+
+	added_raw = "https://raw.githubusercontent.com" + partialLink
+	removed_blob = added_raw.replace('/blob', "")
+	mainList.append(removed_blob)
+
+for file in mainList:
+
+	LinksOfListOpen.write(str(file + "\n"))
+
+
+LinksOfListOpen.close()
 
 
 
 	# 2 ----> -------------------------------------------------------------------------------------#
-	#	 This is the 2nd thing which is also in another file which is needed to be run alone wihtout the rest of the
-	#		code below. 
-	#	Copy the urls which get downloaded by running the above command in another file, and paste them in the urls 
-	#		variable, and it should start downloading by itself, and if you re-run this same file, the .csv files gets 
-	#		overwritten with newest data.
 
 
-#def download_url(url):
-#
-#	print("Downloading: ", url)
-#	file_name_start_pos = url.rfind("/") + 1
-#	file_name = url[file_name_start_pos:]
-#
-#	r = requests.get(url, stream=True)
-#	if r.status_code == requests.codes.ok:
-#		with open(file_name, 'wb') as f:
-#			for data in r:
-#				f.write(data)
-#	return url
-#
-#	# Paste the links that got downloaded in the urls below along with the square brackets.
-#urls = ["https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-22-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-23-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-24-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-25-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-26-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-27-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-28-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-29-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-30-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-31-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-01-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-02-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-03-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-04-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-05-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-06-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-07-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-08-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-09-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-10-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-11-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-12-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-13-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-14-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-15-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-16-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-17-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-18-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-19-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-20-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-21-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-22-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-23-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-24-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-25-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-26-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-27-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-28-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/02-29-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-01-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-02-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-03-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-04-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-05-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-06-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-07-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-08-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-09-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-10-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-11-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-12-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-13-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-14-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-15-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-16-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-17-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-18-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-19-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-20-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-21-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-22-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-23-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-24-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-25-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-26-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-27-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-28-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-29-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-30-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-31-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/04-01-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/04-02-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/04-03-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/04-04-2020.csv", "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/04-05-2020.csv"]
-#
-#	# Increase the number to increase the simultaneous downloads 
-#results = ThreadPool(5).imap_unordered(download_url, urls)
-#
-#
-#for r in results:
-#	print(r)
+
+f = open('LinksOfList.txt', 'r')
+urls = f.read().splitlines()
+
+
+global urlStrippedForPrint
+
+def download_url(url):
+	global urlStrippedForPrint
+	urlStrippedForPrint = url.lstrip('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/').rstrip('.csv')
+	print(f'Downloading: {urlStrippedForPrint}.csv')
+	file_name_start_pos = url.rfind("/") + 1
+	file_name = url[file_name_start_pos:]
+
+	r = requests.get(url, stream=True)
+	if r.status_code == requests.codes.ok:
+		with open(file_name, 'wb') as f:
+			for data in r:
+				f.write(data)
+	return url
+
+
+results = ThreadPool(8).imap_unordered(download_url, urls)
+
+
+for r in results:
+	pass
+	#print(f'{urlStrippedForPrint}.csv')
+	
+
+f.close()
+
+print('All the latest csv files have been downloaded!')
 
 
 
 	# 3A  ----> -----------------------------------------------------------------------------------#
-	#	From here om out you can run the whole code by itself after following the above 2 procedures.
+
 
 
 fileNameCsvJson = open('FileNamesWithCsv.json', 'w')
-os.chdir('Your/Path/Followed/With/Downloads/Of/CsvFiles/')
 
 
 for file in glob.glob('*2020.csv'):
 
-	fileNameCsvJson.write(str(('Your/Path/Followed/With/Downloads/Of/CsvFiles/' + file + "\n")))
+	fileNameCsvJson.write(str((file + "\n")))
 
 fileNameCsvJson.close()
-	# Needed to change the directory because there are too many csv files and also so that the main directory is free from clutter.
-os.chdir('Your/Path/Followed/With/Back/To/Main/Working/Directory/')
 
 
 
 	# 3B ---> 
 
-	
+
 
 with open('FileNamesWithCsv.json', 'r+') as file:
 	fileList = [line.rstrip('\n') for line in file]
@@ -173,7 +161,6 @@ with open('FileNamesWithCsv.json','r') as jsonFile:
 
 
 dateOfDatesJsonHolderJson = open('DatesOfAllDatesJsonHolder.json', 'w')
-os.chdir('Your/Path/Followed/With/Downloads/Of/CsvFiles/')
 
 for file in glob.glob('*2020.csv'):
 
@@ -181,8 +168,6 @@ for file in glob.glob('*2020.csv'):
 	dateOfDatesJsonHolderJson.write(str(file + "\n")) 
 
 dateOfDatesJsonHolderJson.close()
-
-os.chdir('Your/Path/Followed/With/Back/To/Main/Working/Directory/')
 
 
 
@@ -205,7 +190,7 @@ with open('DatesOfAllDatesJsonHolder.json', 'r+') as file:
 
 
 
-headerList = ["Date", "Confirmed", "Deaths", "Recovered", "Active"] # Creates the header list with the following headers in Covid19Result.csv
+headerList = ["Date", "Confirmed", "Deaths", "Recovered", "Active"] # Creates the header list in the result list which is actually needed
 
 statsOpen = open('Covid19Result.csv', 'a+')
 headerWriter = csv.writer(statsOpen)
@@ -218,11 +203,11 @@ dateJsonFile = json.load(jsonFile)
 
 with open('FileNamesWithCsv.json','r') as jsonFile:
 	activeNamesJsonFiles = json.load(jsonFile)
-	dateFromDateList = -1 # Change to -1 if the starting date is from the first date 
+	dateFromDateList = -1 # Change to -1 if the starting date is from the first date
 
 
 	for files in activeNamesJsonFiles:
-		dateFromDateList += 1	# Needed to go through the datelistjson one by one to append to the Date in result
+		dateFromDateList += 1		# Needed to go through the datelistjson one by one to append to the Date in result
 		
 
 		with open(files, 'r') as activeFile:
@@ -275,9 +260,9 @@ with open('FileNamesWithCsv.json','r') as jsonFile:
 
 
 			resultList = RemoveUseless(correct_order_list)
-			
+
 			#Use if you want to remove the rows with ,,, values ie when removing the values with 1-3 cases
-			noValueDeleter = ['Confirmed']			
+			noValueDeleter = ['Confirmed']
 
 			with open('Covid19Result.csv', 'a+', newline='') as writeFile:
 				fieldnames = ['Last Update', 'Confirmed', 'Deaths', 'Recovered', 'Active']
@@ -289,8 +274,8 @@ with open('FileNamesWithCsv.json','r') as jsonFile:
 				for noValue in noValueDeleter:
 					if resultList[noValue] == '0' or resultList[noValue] == '1' or resultList[noValue] == '2' or resultList[noValue] == '3':
 						resultList.clear()
-						
-						
+
+
 				csv_writer.writerow(resultList)
 
 			#print(resultList) # Shows the result which is getting appended to csv file
@@ -302,12 +287,15 @@ jsonFile.close()
 	# Takes out all the empty('') values if 0-3 cases filtered out and adds x.0 at the end
 df = pd.read_csv("Covid19Result.csv")
 ##checking the number of empty rows in th csv file
-print (df.isnull().sum())
+#print (df.isnull().sum())
 ##Droping the empty rows
 modifiedDF = df.dropna()
 ##Saving it to the csv file 
 modifiedDF.to_csv('Covid19Result.csv',index=False)
 
+
+
+	# 7 ----> MatPlot code below--------------------------------------------------------------------------#
 
 
 
@@ -347,4 +335,5 @@ ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.1), shadow=True, ncol=4)
 fig.tight_layout()
 
 plt.show()
+
 
