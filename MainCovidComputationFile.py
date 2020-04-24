@@ -18,7 +18,8 @@ csvClear = "Covid19Result.csv"
 f = open(csvClear, "w+")
 f.close()
 
-
+# Change CountryName variable to the country you want.
+CountryName = 'India'
 
 	# 1 ----> -------------------------------------------------------------------------------#
 
@@ -93,6 +94,7 @@ results = ThreadPool(8).imap_unordered(download_url, urls)
 
 for r in results:
 	pass
+	# If  you want to show which one is currently being downloaded uncomment the next line
 	#print(f'{urlStrippedForPrint}.csv')
 	
 
@@ -217,15 +219,15 @@ with open('FileNamesWithCsv.json','r') as jsonFile:
 			for line in activeFile1:
 
 				if 'Country/Region' in line:
-					if line['Country/Region'] == "India":
+					if line['Country/Region'] == CountryName:
 						correct_order_list = line
 						break
 
-					elif line['Country/Region'] != 'India':		# Checks if India is in the list, if not adds 0 to all list values
+					elif line['Country/Region'] != CountryName:		# Checks if India is in the list, if not adds 0 to all list values
 						correct_order_list = {'Last Update': 'x', 'Confirmed': '0', 'Deaths': '0', 'Recovered': '0', 'Active': '0'}
 
 				elif 'Country_Region' in line:
-					if line['Country_Region'] == 'India':
+					if line['Country_Region'] == CountryName:
 						correct_order_list = line
 
 
@@ -261,7 +263,10 @@ with open('FileNamesWithCsv.json','r') as jsonFile:
 
 			resultList = RemoveUseless(correct_order_list)
 
-			#Use if you want to remove the rows with ,,, values ie when removing the values with 1-3 cases
+
+				# Use if you want to remove the rows with ,,, values ie when removing the values with 1-3 cases
+				# Else comment out the rest of the lines from 277 to 279. 
+
 			noValueDeleter = ['Confirmed']
 
 			with open('Covid19Result.csv', 'a+', newline='') as writeFile:
@@ -270,16 +275,19 @@ with open('FileNamesWithCsv.json','r') as jsonFile:
 				csv_writer = csv.DictWriter(writeFile, fieldnames=fieldnames)
 
 
-					#Takes out the ROWs with 0,1,2,3 in them and replaces with empty('') values.	
-				for noValue in noValueDeleter:
-					if resultList[noValue] == '0' or resultList[noValue] == '1' or resultList[noValue] == '2' or resultList[noValue] == '3':
-						resultList.clear()
+					# Takes out the ROWs with 0,1,2,3 in them and replaces with empty('') values.
+					# If you want to filter out the days with set amount of cases, add the number and they'll be ignored.
+					# And uncomment the lines 282 to 284.
+
+				#for noValue in noValueDeleter:
+				#	if resultList[noValue] == '0' or resultList[noValue] == '1' or resultList[noValue] == '2' or resultList[noValue] == '3':
+				#		resultList.clear()
 
 
 				csv_writer.writerow(resultList)
 
 			#print(resultList) # Shows the result which is getting appended to csv file
-			#print(len(resultList)) # Shows the number of colums in the result == 5
+			#print(len(resultList)) # Shows the number of colums in the CovidResult
 
 jsonFile.close()
 
@@ -325,7 +333,7 @@ rects2 = ax.barh(x - barWidth / 2, ResultDataAct, barWidth, color='#1eb2a6', lab
 rects3 = ax.barh(x + barWidth / 4, ResultDataRecover, barWidth, color='#ffb0cd', label='Recovered')
 rects4 = ax.barh(x - barWidth / 4, ResultDataDeath, barWidth, color='#dd2c00', label='Deaths') #3b6978
 
-ax.set_title('Covid19 in India')
+ax.set_title(f'Covid19 in {CountryName}')
 ax.set_xlabel('Number of People')
 ax.set_yticks(x)
 ax.set_yticklabels(labels)
@@ -335,5 +343,4 @@ ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.1), shadow=True, ncol=4)
 fig.tight_layout()
 
 plt.show()
-
 
